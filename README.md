@@ -1,6 +1,6 @@
-# Q Applet: GitHub
+# Q Applet: Asana
 
-Displays GitHub notifications on a Das Keyboard Q Series.
+Displays Asana notifications on a Das Keyboard Q Series.
 
 ## Changelog
 
@@ -8,7 +8,7 @@ Displays GitHub notifications on a Das Keyboard Q Series.
 
 ## Installation
 
-Requires a Das Keyboard Q Series: www.daskeyboard.com/5q and a GitHub account.
+Requires a Das Keyboard Q Series: www.daskeyboard.com/5q and a Asana account.
 
 Installation, configuration and uninstallation of applets is done within
 the Q Desktop application (https://www.daskeyboard.io/get-started/software/)
