@@ -38,9 +38,10 @@ class Trello extends q.DesktopApp {
     return getNewTasks(this.authorization.token).then(newTasks => {
       if (newTasks && newTasks.length > 0) {
         logger.info("Got " + newTasks.length + " new actions.");
-        return new q.Signal([
-          [new q.Point("#00FF00")]
-        ]);
+        return new q.Signal({
+          points: [[new q.Point("#00FF00")]],
+          name: `You have ${newTasks.length} new tasks in Asana.`
+        });
       } else {
         return null;
       }
