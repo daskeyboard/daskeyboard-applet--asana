@@ -1,45 +1,60 @@
 const q = require('daskeyboard-applet');
-const Asana = require('asana');
 
 const logger = q.logger;
+const queryUrlBase = 'https://app.asana.com/api/1.0';
 
-async function getNewTasks(token) {
-  var client = Asana.Client.create().useAccessToken(token);
-  return client.users.me()
-    .then(user => {
-      const userId = user.id;
-      const workspaceId = user.workspaces[0].id;
-      return client.tasks.findAll({
-        assignee: userId,
-        workspace: workspaceId,
-        completed_since: 'now',
-        opt_fields: 'id,name,assignee_status,completed'
-      });
-    })
-    .then(response => {
-      return response.data;
-    })
-    .filter(task => {
-      return task.assignee_status === 'new'
-        || task.assignee_status === 'inbox'
-        ;
-    })
-    .then(list => {
-      return list;
-    })
-    .catch(e => {
-      logger.error(e);
+class Asana extends q.DesktopApp {
+  async getNewTasks() {
+
+    let query = "/users/me";
+    let proxyRequest = new q.Oauth2ProxyRequest({
+      apiKey: this.authorization.apiKey,
+      uri: queryUrlBase + query
     });
-}
 
-class Trello extends q.DesktopApp {
+    // first get the user workspaces
+    return this.oauth2ProxyRequest(proxyRequest).then(json => {
+        const user = json.data;
+        if (user.workspaces && user.workspaces.length) {
+          const workspaceId = user.workspaces[0].id;
+
+          query = `/workspaces/${workspaceId}/tasks/search`;
+          proxyRequest = new q.Oauth2ProxyRequest({
+            apiKey: this.authorization.apiKey,
+            uri: queryUrlBase + query,
+            method: 'GET',
+            qs: {
+              'assignee.any': 'me',
+              'opt_fields': 'name,assignee.email,completed,assignee_status',
+              'limit': 100
+            },
+          });
+
+          return (this.oauth2ProxyRequest(proxyRequest));
+        }
+      }).then(json => {
+        return json.data.filter(task => {
+          return task.assignee_status === 'new' ||
+            task.assignee_status === 'inbox';
+        });
+      })
+      .then(list => {
+        return list;
+      })
+      .catch(e => {
+        logger.error(e);
+      });
+  }
+
   async run() {
     console.log("Running.");
-    return getNewTasks(this.authorization.token).then(newTasks => {
+    return this.getNewTasks().then(newTasks => {
       if (newTasks && newTasks.length > 0) {
         logger.info("Got " + newTasks.length + " new actions.");
         return new q.Signal({
-          points: [[new q.Point("#00FF00")]],
+          points: [
+            [new q.Point("#00FF00")]
+          ],
           name: `You have ${newTasks.length} new tasks in Asana.`
         });
       } else {
@@ -51,8 +66,7 @@ class Trello extends q.DesktopApp {
 
 
 module.exports = {
-  getNewTasks: getNewTasks,
-  Trello: Trello
+  Asana: Asana
 }
 
-const applet = new Trello();
+const applet = new Asana();

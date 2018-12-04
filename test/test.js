@@ -1,26 +1,14 @@
 const assert = require('assert');
-const t = require('../index');
+const {
+  Asana
+} = require('../index');
 const auth = require('./auth.json');
-const token = auth.token;
 
-console.log("My token is: " + token);
+console.log("My auth is: " + JSON.stringify(auth));
 
-describe('getNewTasks', function () {
-  it('can get new tasks', function () {
-    return t.getNewTasks(token).then((tasks) => {
-      console.log("Tasks: ", tasks);
-      assert.ok(tasks);
-      assert.ok(tasks[0]);
-      assert.ok(tasks[0].id);
-    }).catch((error) => {
-      assert.fail(error);
-    })
-  })
-});
-
-describe('Trello', () => {
+describe('Asana', () => {
   async function makeApp() {
-    let app = new t.Trello();
+    let app = new Asana();
 
     await app.processConfig({
       extensionId: 777,
@@ -35,14 +23,30 @@ describe('Trello', () => {
     return app;
   }
 
-  describe('#run()', () => {
-    return makeApp().then(app => {
-      return app.run().then((signal) => {
-        console.log(signal);
-        assert.ok(signal);
-      }).catch((error) => {
-        assert.fail(error)
+  describe('getNewTasks', async function () {
+    it('can get new tasks', async function () {
+      this.timeout(5000);
+      return makeApp().then(app => {
+        return app.getNewTasks().then((tasks) => {
+
+          console.log("Tasks: ", tasks);
+          assert.ok(tasks);
+          assert.ok(tasks[0]);
+          assert.ok(tasks[0].id);
+        }).catch((error) => {
+          assert.fail(error);
+        })
       });
     })
+  });
+
+  describe('#run()', async () => {
+    const app = await makeApp();
+    return app.run().then((signal) => {
+      console.log(signal);
+      assert.ok(signal);
+    }).catch((error) => {
+      assert.fail(error)
+    });
   });
 })

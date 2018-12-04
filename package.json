@@ -26,8 +26,7 @@
   "author": "Cory Kim",
   "license": "MIT",
   "dependencies": {
-    "asana": "^0.16.6",
-    "daskeyboard-applet": "^2.8.0"
+    "daskeyboard-applet": "^2.9.1"
   },
   "qConfig": {
     "geometry": {
@@ -37,9 +36,8 @@
     "applet": {
       "defaults": {}
     },
-    "requirements": {
-      "authorization": "basic",
-      "applet": {}
+    "authorization": {
+      "type": "oauth2"
     }
   },
   "devDependencies": {
