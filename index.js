@@ -3,28 +3,45 @@ const q = require('daskeyboard-applet');
 const logger = q.logger;
 const queryUrlBase = 'https://app.asana.com/api/1.0';
 
-class Asana extends q.DesktopApp {
-  async getNewTasks() {
+function getTimestamp(date) {
+  date = date || new Date();
+  // Asana API docs say it accepts ISO-8601, but that doesn't actually work
+  return date.toISOString().substring(0,10);
+}
 
-    let query = "/users/me";
-    let proxyRequest = new q.Oauth2ProxyRequest({
+class Asana extends q.DesktopApp {
+  constructor() {
+    super();
+    this.timestamp = getTimestamp();
+    this.tasksSeen = {};
+  }
+  async getMe() {
+    const query = "/users/me";
+    const proxyRequest = new q.Oauth2ProxyRequest({
       apiKey: this.authorization.apiKey,
       uri: queryUrlBase + query
     });
 
     // first get the user workspaces
-    return this.oauth2ProxyRequest(proxyRequest).then(json => {
+    return this.oauth2ProxyRequest(proxyRequest);
+  }
+
+  async getNewTasks() {
+    // first get the user workspaces
+    return this.getMe().then(json => {
         const user = json.data;
         if (user.workspaces && user.workspaces.length) {
           const workspaceId = user.workspaces[0].id;
 
-          query = `/workspaces/${workspaceId}/tasks/search`;
-          proxyRequest = new q.Oauth2ProxyRequest({
+          const query = `/workspaces/${workspaceId}/tasks/search`;
+          const proxyRequest = new q.Oauth2ProxyRequest({
             apiKey: this.authorization.apiKey,
             uri: queryUrlBase + query,
             method: 'GET',
             qs: {
               'assignee.any': 'me',
+              'created_on.after': this.timestamp,
+              'completed': "false",
               'opt_fields': 'name,assignee.email,completed,assignee_status',
               'limit': 100
             },
@@ -34,11 +51,14 @@ class Asana extends q.DesktopApp {
         }
       }).then(json => {
         return json.data.filter(task => {
-          return task.assignee_status === 'new' ||
-            task.assignee_status === 'inbox';
+          return !this.tasksSeen[task.id] && (task.assignee_status === 'new' ||
+            task.assignee_status === 'inbox');
         });
       })
       .then(list => {
+        for (let task of list) {
+          this.tasksSeen[task.id] = 1;
+        }
         return list;
       })
       .catch(e => {
@@ -49,6 +69,7 @@ class Asana extends q.DesktopApp {
   async run() {
     console.log("Running.");
     return this.getNewTasks().then(newTasks => {
+      this.timestamp = getTimestamp();
       if (newTasks && newTasks.length > 0) {
         logger.info("Got " + newTasks.length + " new actions.");
         return new q.Signal({

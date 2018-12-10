@@ -31,7 +31,7 @@
   },
   "author": "Cory Kim",
   "dependencies": {
-    "daskeyboard-applet": "^2.9.1"
+    "daskeyboard-applet": "^2.10.5"
   },
   "qConfig": {
     "geometry": {
