@@ -10,21 +10,26 @@
   "videoUrl": "",
   "icon": "assets/asana-icon.png",
   "image": "images/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxbigimage.png",
-  "publisherName": "Das Keyboard",
+  "publisher": "Das Keyboard",
   "authorName": "Das Keyboard team",
   "authorUrl": "https://twitter.com/daskeyboard",
   "issuesUrl": "https://github.com/metadot/q-applet-asana/issues",
-  "homepage": "https://github.com/DasKeyboard/q-applet-asana",
+  "homePageUrl": "https://github.com/DasKeyboard/q-applet-asana",
   "developerRepoUrl": "https://github.com/metadot/q-applet-asana",
+  "license": "GPL",
   "licenseUrl": "http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt",
-  "changelogUrl": "",
+  "changelogUrl": "CHANGELOG.md",
   "qActionUrl": "",
+  "readMeUrl": "README.md",
+  "readMeEndUserUrl": "README_ENDUSER.md",
+  "engines": {
+    "das-keyboard-q": "3.1.0"
+  },
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
   "author": "Cory Kim",
-  "license": "MIT",
   "dependencies": {
     "daskeyboard-applet": "^2.9.1"
   },
