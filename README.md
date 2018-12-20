@@ -8,12 +8,18 @@ Displays Asana notifications on a Das Keyboard Q Series.
 
 ## Installation
 
-Requires a Das Keyboard Q Series: www.daskeyboard.com/5q and a Asana account.
+Requires a Das Keyboard Q Series: www.daskeyboard.com and a Asana account.
 
 Installation, configuration and uninstallation of applets is done within
-the Q Desktop application (https://www.daskeyboard.io/get-started/software/)
+the Q Desktop application (https://www.daskeyboard.com/q)
 
-## Docs & Contribute
+## Running tests
+
+- `yarn test`
+
+## Contributions
+
+Pull requests welcome.
 
 ## Copyright / License
 
