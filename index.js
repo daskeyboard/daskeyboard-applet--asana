@@ -60,9 +60,6 @@ class Asana extends q.DesktopApp {
           this.tasksSeen[task.id] = 1;
         }
         return list;
-      })
-      .catch(e => {
-        logger.error(e);
       });
   }
 
@@ -81,6 +78,11 @@ class Asana extends q.DesktopApp {
       } else {
         return null;
       }
+    }).catch(error => {
+      const message = error.statusCode == 402 
+        ? 'Payment required. This applet requires a premium Asana account.' : error;
+      logger.error(`Sending error signal: ${message}`);
+      this.signalError(message);
     })
   }
 }
