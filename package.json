@@ -22,7 +22,7 @@
   "readMeUrl": "README.md",
   "readMeEndUserUrl": "README_ENDUSER.md",
   "engines": {
-    "das-keyboard-q": "3.1.0"
+    "das-keyboard-q": "3.1.2"
   },
   "main": "index.js",
   "scripts": {
