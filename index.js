@@ -74,9 +74,9 @@ class Asana extends q.DesktopApp {
             [new q.Point("#00FF00")]
           ],
           name: `Asana`,
-          message: `You have ${newTasks.length} new action in Asana.`,
+          message: `You have ${newTasks.length} new action(s) in Asana.`,
           link: {
-            url: 'https://www.app.asana.com',
+            url: 'https://app.asana.com/0/inbox',
             label: 'Show in Asana',
           },
         });
