@@ -2,7 +2,7 @@
   "name": "daskeyboard-applet--asana",
   "displayName": "Asana",
   "version": "1.0.1",
-  "description": "Das Keyboard Applet for Asana Notifications.",
+  "description": "Displays Asana notifications",
   "longDescription": "Get a visual notification on your Das Keyboard Q series when there is a new Asana action.",
   "officialProductName": "Asana",
   "appUrl": "www.github.com",
