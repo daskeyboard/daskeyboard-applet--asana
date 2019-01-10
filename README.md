@@ -1,6 +1,10 @@
 # Q Applet: Asana
 
-Displays Asana notifications on a Das Keyboard Q Series.
+Displays Asana notifications from your prenium account on a Das Keyboard Q Series.
+
+Example:
+
+![Asana on a Das Keyboard Q](assets/image.png "Q Asana")
 
 ## Changelog
 
