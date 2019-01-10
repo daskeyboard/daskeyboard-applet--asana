@@ -1,6 +1,6 @@
 # Asana
 
-Displays Asana notifications for your premium account on a Das Keyboard Q Series.
+Displays Asana premium account notifications on a Das Keyboard Q Series.
 
 Example:
 
