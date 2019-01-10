@@ -32,9 +32,9 @@ class Asana extends q.DesktopApp {
   async getNewTasks() {
     // first get the user workspaces
     return this.getMe().then(json => {
-        const user = json.data;
-        if (user.workspaces && user.workspaces.length) {
-          const workspaceId = user.workspaces[0].id;
+      const user = json.data;
+      if (user.workspaces && user.workspaces.length) {
+        const workspaceId = user.workspaces[0].id;
 
           const query = `/workspaces/${workspaceId}/tasks/search`;
           const proxyRequest = new q.Oauth2ProxyRequest({
@@ -56,8 +56,8 @@ class Asana extends q.DesktopApp {
           return (( this.tasksUpdated[task.id]!=task.modified_at) && (task.assignee_status === 'new' ||
             task.assignee_status === 'inbox'));
         });
-      })
-      .then(list => {
+
+      }).then(list => {
         for (let task of list) {
           // For updating tasks seen
           // this.taskSeen[task.id]=1;
@@ -90,10 +90,10 @@ class Asana extends q.DesktopApp {
         return null;
       }
     }).catch(error => {
-      const message = error.statusCode == 402 
+      const message = error.statusCode == 402
         ? 'Payment required. This applet requires a premium Asana account.' : error;
       logger.error(`Sending error signal: ${message}`);
-      this.signalError(message);
+      throw new Error(message);
     })
   }
 }
