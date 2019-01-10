@@ -13,7 +13,10 @@ class Asana extends q.DesktopApp {
   constructor() {
     super();
     this.timestamp = getTimestamp();
+    // For checking tasks seen status
     this.tasksSeen = {};
+    // For checking tasks seen status
+    this.tasksUpdated = {};
   }
   async getMe() {
     const query = "/users/me";
@@ -41,23 +44,26 @@ class Asana extends q.DesktopApp {
             qs: {
               'assignee.any': 'me',
               'created_on.after': this.timestamp,
-              'completed': "false",
-              'opt_fields': 'name,assignee.email,completed,assignee_status',
+              // 'completed': "false", // We want to get all tasks
+              'opt_fields': 'name,assignee.email,completed,assignee_status,modified_at',
               'limit': 100
             },
           });
-
           return (this.oauth2ProxyRequest(proxyRequest));
         }
       }).then(json => {
         return json.data.filter(task => {
-          return !this.tasksSeen[task.id] && (task.assignee_status === 'new' ||
-            task.assignee_status === 'inbox');
+          return (( this.tasksUpdated[task.id]!=task.modified_at) && (task.assignee_status === 'new' ||
+            task.assignee_status === 'inbox'));
         });
       })
       .then(list => {
         for (let task of list) {
-          this.tasksSeen[task.id] = 1;
+          // For updating tasks seen
+          // this.taskSeen[task.id]=1;
+
+          // For updating tasks updated
+          this.tasksUpdated[task.id]=task.modified_at;
         }
         return list;
       });
@@ -68,13 +74,13 @@ class Asana extends q.DesktopApp {
     return this.getNewTasks().then(newTasks => {
       this.timestamp = getTimestamp();
       if (newTasks && newTasks.length > 0) {
-        logger.info("Got " + newTasks.length + " new actions.");
+        logger.info("Got " + newTasks.length + " new notification(s).");
         return new q.Signal({
           points: [
             [new q.Point("#00FF00")]
           ],
           name: `Asana`,
-          message: `You have ${newTasks.length} new action(s) in Asana.`,
+          message: `You have ${newTasks.length} new notification(s) in Asana.`,
           link: {
             url: 'https://app.asana.com/0/inbox',
             label: 'Show in Asana',
