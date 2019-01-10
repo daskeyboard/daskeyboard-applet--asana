@@ -29,32 +29,32 @@ class Asana extends q.DesktopApp {
   async getNewTasks() {
     // first get the user workspaces
     return this.getMe().then(json => {
-        const user = json.data;
-        if (user.workspaces && user.workspaces.length) {
-          const workspaceId = user.workspaces[0].id;
+      const user = json.data;
+      if (user.workspaces && user.workspaces.length) {
+        const workspaceId = user.workspaces[0].id;
 
-          const query = `/workspaces/${workspaceId}/tasks/search`;
-          const proxyRequest = new q.Oauth2ProxyRequest({
-            apiKey: this.authorization.apiKey,
-            uri: queryUrlBase + query,
-            method: 'GET',
-            qs: {
-              'assignee.any': 'me',
-              'created_on.after': this.timestamp,
-              'completed': "false",
-              'opt_fields': 'name,assignee.email,completed,assignee_status',
-              'limit': 100
-            },
-          });
-
-          return (this.oauth2ProxyRequest(proxyRequest));
-        }
-      }).then(json => {
-        return json.data.filter(task => {
-          return !this.tasksSeen[task.id] && (task.assignee_status === 'new' ||
-            task.assignee_status === 'inbox');
+        const query = `/workspaces/${workspaceId}/tasks/search`;
+        const proxyRequest = new q.Oauth2ProxyRequest({
+          apiKey: this.authorization.apiKey,
+          uri: queryUrlBase + query,
+          method: 'GET',
+          qs: {
+            'assignee.any': 'me',
+            'created_on.after': this.timestamp,
+            'completed': "false",
+            'opt_fields': 'name,assignee.email,completed,assignee_status',
+            'limit': 100
+          },
         });
-      })
+
+        return (this.oauth2ProxyRequest(proxyRequest));
+      }
+    }).then(json => {
+      return json.data.filter(task => {
+        return !this.tasksSeen[task.id] && (task.assignee_status === 'new' ||
+          task.assignee_status === 'inbox');
+      });
+    })
       .then(list => {
         for (let task of list) {
           this.tasksSeen[task.id] = 1;
@@ -84,10 +84,10 @@ class Asana extends q.DesktopApp {
         return null;
       }
     }).catch(error => {
-      const message = error.statusCode == 402 
+      const message = error.statusCode == 402
         ? 'Payment required. This applet requires a premium Asana account.' : error;
       logger.error(`Sending error signal: ${message}`);
-      this.signalError(message);
+      throw new Error(message);
     })
   }
 }
