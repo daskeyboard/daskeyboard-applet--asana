@@ -1,8 +1,9 @@
-#### 1.0.1 (2018-12-17)
+#### 1.0.1 (2019-01-10)
 
 ##### Chores
 
 * **package:**  Package.json updated. (2603ec20)
+*  from become for. (a46b414a)
 
 ##### Documentation Changes
 
@@ -21,3 +22,7 @@
 
 * **task search:**  Only signal if new tasks (e572b769)
 * **readme:**  Update readme (b916c1cf)
+*  new image updated. (e4a50714)
+*  description updated. (8007ba39)
+*  content updated. (526eb580)
+*  premium account. (a4c56eb8)
