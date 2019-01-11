@@ -17,6 +17,8 @@ class Asana extends q.DesktopApp {
     this.tasksSeen = {};
     // For checking tasks seen status
     this.tasksUpdated = {};
+    // For checking plural or singular
+    this.notification ="";
   }
   async getMe() {
     const query = "/users/me";
@@ -74,13 +76,20 @@ class Asana extends q.DesktopApp {
     return this.getNewTasks().then(newTasks => {
       this.timestamp = getTimestamp();
       if (newTasks && newTasks.length > 0) {
-        logger.info("Got " + newTasks.length + " new notification(s).");
+        logger.info("Got " + newTasks.length + " notification.");
+
+        if(newTasks.length==1){
+          this.notification="notification";
+        }else{
+          this.notification="notifications";
+        }
+
         return new q.Signal({
           points: [
-            [new q.Point("#00FF00")]
+            [new q.Point("#0000FF",q.Effects.BLINK)]
           ],
           name: `Asana`,
-          message: `You have ${newTasks.length} new notification(s) in Asana.`,
+          message: `You have ${newTasks.length} ${this.notification}.`,
           link: {
             url: 'https://app.asana.com/0/inbox',
             label: 'Show in Asana',
