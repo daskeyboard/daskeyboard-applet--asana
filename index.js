@@ -6,7 +6,7 @@ const queryUrlBase = 'https://app.asana.com/api/1.0';
 function getTimestamp(date) {
   date = date || new Date();
   // Asana API docs say it accepts ISO-8601, but that doesn't actually work
-  return date.toISOString().substring(0,10);
+  return date.toISOString().substring(0, 10);
 }
 
 class Asana extends q.DesktopApp {
@@ -18,7 +18,7 @@ class Asana extends q.DesktopApp {
     // For checking tasks seen status
     this.tasksUpdated = {};
     // For checking plural or singular
-    this.notification ="";
+    this.notification = "";
   }
   async getMe() {
     const query = "/users/me";
@@ -38,37 +38,37 @@ class Asana extends q.DesktopApp {
       if (user.workspaces && user.workspaces.length) {
         const workspaceId = user.workspaces[0].id;
 
-          const query = `/workspaces/${workspaceId}/tasks/search`;
-          const proxyRequest = new q.Oauth2ProxyRequest({
-            apiKey: this.authorization.apiKey,
-            uri: queryUrlBase + query,
-            method: 'GET',
-            qs: {
-              'assignee.any': 'me',
-              'created_on.after': this.timestamp,
-              // 'completed': "false", // We want to get all tasks
-              'opt_fields': 'name,assignee.email,completed,assignee_status,modified_at',
-              'limit': 100
-            },
-          });
-          return (this.oauth2ProxyRequest(proxyRequest));
-        }
-      }).then(json => {
-        return json.data.filter(task => {
-          return (( this.tasksUpdated[task.id]!=task.modified_at) && (task.assignee_status === 'new' ||
-            task.assignee_status === 'inbox'));
+        const query = `/workspaces/${workspaceId}/tasks/search`;
+        const proxyRequest = new q.Oauth2ProxyRequest({
+          apiKey: this.authorization.apiKey,
+          uri: queryUrlBase + query,
+          method: 'GET',
+          qs: {
+            'assignee.any': 'me',
+            'created_on.after': this.timestamp,
+            // 'completed': "false", // We want to get all tasks
+            'opt_fields': 'name,assignee.email,completed,assignee_status,modified_at',
+            'limit': 100
+          },
         });
-
-      }).then(list => {
-        for (let task of list) {
-          // For updating tasks seen
-          // this.taskSeen[task.id]=1;
-
-          // For updating tasks updated
-          this.tasksUpdated[task.id]=task.modified_at;
-        }
-        return list;
+        return (this.oauth2ProxyRequest(proxyRequest));
+      }
+    }).then(json => {
+      return json.data.filter(task => {
+        return ((this.tasksUpdated[task.id] != task.modified_at) && (task.assignee_status === 'new' ||
+          task.assignee_status === 'inbox'));
       });
+
+    }).then(list => {
+      for (let task of list) {
+        // For updating tasks seen
+        // this.taskSeen[task.id]=1;
+
+        // For updating tasks updated
+        this.tasksUpdated[task.id] = task.modified_at;
+      }
+      return list;
+    });
   }
 
   async run() {
@@ -78,15 +78,15 @@ class Asana extends q.DesktopApp {
       if (newTasks && newTasks.length > 0) {
         logger.info("Got " + newTasks.length + " notification.");
 
-        if(newTasks.length==1){
-          this.notification="notification";
-        }else{
-          this.notification="notifications";
+        if (newTasks.length == 1) {
+          this.notification = "notification";
+        } else {
+          this.notification = "notifications";
         }
 
         return new q.Signal({
           points: [
-            [new q.Point("#0000FF",q.Effects.BLINK)]
+            [new q.Point("#0000FF", q.Effects.BLINK)]
           ],
           name: `Asana`,
           message: `You have ${newTasks.length} ${this.notification}.`,
