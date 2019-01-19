@@ -3,10 +3,16 @@ const q = require('daskeyboard-applet');
 const logger = q.logger;
 const queryUrlBase = 'https://app.asana.com/api/1.0';
 
-function getTimestamp(date) {
-  date = date || new Date();
-  // Asana API docs say it accepts ISO-8601, but that doesn't actually work
-  return date.toISOString().substring(0, 10);
+function getTimestamp() {
+  var d = new Date(Date.now()),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
 }
 
 class Asana extends q.DesktopApp {
