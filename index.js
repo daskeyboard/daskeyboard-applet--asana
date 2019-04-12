@@ -78,7 +78,7 @@ class Asana extends q.DesktopApp {
   }
 
   async run() {
-    console.log("Running.");
+    logger.info("Asana running.");
     return this.getNewTasks().then(newTasks => {
       this.timestamp = getTimestamp();
       if (newTasks && newTasks.length > 0) {
@@ -108,7 +108,16 @@ class Asana extends q.DesktopApp {
       const message = error.statusCode == 402
         ? 'Payment required. This applet requires a premium Asana account.' : error;
       logger.error(`Sending error signal: ${message}`);
-      throw new Error(message);
+      if(`${error.message}`.includes("getaddrinfo")){
+        return q.Signal.error(
+          'The Asana service returned an error. <b>Please check your internet connection</b>.'
+        );
+      }
+      return q.Signal.error([
+        'The Asana service returned an error. <b>Please check your account</b>.',
+        `Detail: ${error.message}`
+      ]);
+      // throw new Error(message);
     })
   }
 }
