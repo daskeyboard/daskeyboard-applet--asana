@@ -1,3 +1,15 @@
+#### 1.0.2 (2019-04-12)
+
+##### Chores
+
+*  udpated version number and author. (350a2397)
+*  added backline. (40c8cb3e)
+*  updated license date. (e6cd012e)
+
+##### Bug Fixes
+
+*  handled internet connection error. (035f74aa)
+
 #### 1.0.1 (2019-01-10)
 
 ##### Chores
