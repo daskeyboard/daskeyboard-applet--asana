@@ -115,7 +115,7 @@ class Asana extends q.DesktopApp {
       }
       return q.Signal.error([
         'The Asana service returned an error. <b>Please check your account</b>.',
-        `Detail: ${error.message}`
+        `Detail: ${message}`
       ]);
       // throw new Error(message);
     })
