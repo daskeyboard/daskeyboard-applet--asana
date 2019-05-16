@@ -1,7 +1,7 @@
 {
   "name": "daskeyboard-applet--asana",
   "displayName": "Asana",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Displays Asana notifications.",
   "longDescription": "Get a visual notification on your Das Keyboard Q series when there is a new Asana action.",
   "officialProductName": "Asana",

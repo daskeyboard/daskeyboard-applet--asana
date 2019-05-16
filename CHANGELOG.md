@@ -1,3 +1,9 @@
+#### 1.0.3 (2019-05-16)
+
+##### Chores
+
+*  removed internet connection error signal.
+
 #### 1.0.2 (2019-04-12)
 
 ##### Chores
