@@ -109,14 +109,16 @@ class Asana extends q.DesktopApp {
         ? 'Payment required. This applet requires a premium Asana account.' : error;
       logger.error(`Sending error signal: ${message}`);
       if(`${error.message}`.includes("getaddrinfo")){
-        return q.Signal.error(
-          'The Asana service returned an error. <b>Please check your internet connection</b>.'
-        );
+        // Do not send signal error when getting internet connection error.
+        // return q.Signal.error(
+        //   'The Asana service returned an error. <b>Please check your internet connection</b>.'
+        // );
+      }else{
+        return q.Signal.error([
+          'The Asana service returned an error. <b>Please check your account</b>.',
+          `Detail: ${message}`
+        ]);
       }
-      return q.Signal.error([
-        'The Asana service returned an error. <b>Please check your account</b>.',
-        `Detail: ${message}`
-      ]);
       // throw new Error(message);
     })
   }
