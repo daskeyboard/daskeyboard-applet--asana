@@ -7,3 +7,5 @@ Asana is a work management platform.
 For more information about Asana visit <https://www.asana.com>.
 
 ![Asana applet on a Das Keyboard Q](assets/image.png "Das Keyboard Asana applet")
+
+This applet uses Asana [API](https://asana.com/guide/help/api/api).
