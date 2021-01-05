@@ -42,8 +42,7 @@ class Asana extends q.DesktopApp {
     return this.getMe().then(json => {
       const user = json.data;
       if (user.workspaces && user.workspaces.length) {
-        const workspaceId = user.workspaces[0].id;
-
+        const workspaceId = user.workspaces[0].gid;
         const query = `/workspaces/${workspaceId}/tasks/search`;
         const proxyRequest = new q.Oauth2ProxyRequest({
           apiKey: this.authorization.apiKey,
@@ -52,7 +51,6 @@ class Asana extends q.DesktopApp {
           qs: {
             'assignee.any': 'me',
             'created_on.after': this.timestamp,
-            // 'completed': "false", // We want to get all tasks
             'opt_fields': 'name,assignee.email,completed,assignee_status,modified_at',
             'limit': 100
           },
@@ -61,17 +59,14 @@ class Asana extends q.DesktopApp {
       }
     }).then(json => {
       return json.data.filter(task => {
-        return ((this.tasksUpdated[task.id] != task.modified_at) && (task.assignee_status === 'new' ||
+        return ((this.tasksUpdated[task.gid] != task.modified_at) && (task.assignee_status === 'new' ||
           task.assignee_status === 'inbox'));
       });
 
     }).then(list => {
       for (let task of list) {
-        // For updating tasks seen
-        // this.taskSeen[task.id]=1;
-
         // For updating tasks updated
-        this.tasksUpdated[task.id] = task.modified_at;
+        this.tasksUpdated[task.gid] = task.modified_at;
       }
       return list;
     });

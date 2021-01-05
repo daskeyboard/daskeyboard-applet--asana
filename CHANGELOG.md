@@ -1,3 +1,9 @@
+#### 1.0.4 (2021-01-05)
+
+##### Bug Fixes
+
+*  Changed attribute name from data according to Asana API.
+
 #### 1.0.3 (2019-05-16)
 
 ##### Chores
